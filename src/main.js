@@ -9,6 +9,7 @@ import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
+import { changeTheme } from './utils/theme';
 
 const app = createApp(App);
 
@@ -23,5 +24,5 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
-
+changeTheme();
 app.mount('#app');

@@ -1,6 +1,6 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
-import { TopBarItems } from '@/menu/TopBar';
+import { TopBarItems } from '@/utils/TopBar';
 import { useRouter } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
 
@@ -10,7 +10,7 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
 
 const printLog = () => {
-    console.log('Log printado por uma chamada nada aver');
+    console.log('Mostrando log');
 };
 
 const topBarFunctions = {

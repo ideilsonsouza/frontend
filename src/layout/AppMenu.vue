@@ -1,7 +1,6 @@
 <script setup>
-import { SiderBarItems } from '@/menu/SideBar';
+import { SiderBarItems } from '@/utils/SideBar';
 import AppMenuItem from './AppMenuItem.vue';
-
 
 </script>
 
