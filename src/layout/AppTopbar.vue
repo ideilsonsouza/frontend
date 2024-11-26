@@ -1,8 +1,33 @@
 <script setup>
 import { useLayout } from '@/layout/composables/layout';
+import { TopBarItems } from '@/menu/TopBar';
+import { useRouter } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
 
+const router = useRouter()
+
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
+
+
+const printLog = () => {
+    console.log('Log printado por uma chamada nada aver');
+};
+
+const topBarFunctions = {
+    printLog: printLog,
+}
+
+const itemClick = (item) => {
+    if (item) {
+        if (item.to) {
+            router.push(item.to)
+        } else if (item.click) {
+            const clickFunction = topBarFunctions[item.click]
+            clickFunction()
+        }
+    }
+}
+
 </script>
 
 <template>
@@ -55,18 +80,13 @@ const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <!-- <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
-                    </button> -->
-                    <!-- <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
-                    </button> -->
-                    <!-- <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
-                        <span>Profile</span>
-                    </button> -->
+
+                    <button v-for="(item, i) in TopBarItems" :key="item" class="layout-topbar-action"
+                        @click="itemClick(item)">
+                        <i :class="item.icon"></i>
+                        <span>{{ item.label }}</span>
+                    </button>
+
                 </div>
             </div>
         </div>
