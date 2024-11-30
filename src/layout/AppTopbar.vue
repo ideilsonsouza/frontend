@@ -66,7 +66,7 @@ const itemClick = (item) => {
                 <div class="relative">
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
-                        type="button" class="layout-topbar-action layout-topbar-action-highlight">
+                        type="button" class="layout-topbar-action layout-topbar-action">
                         <i class="pi pi-palette"></i>
                     </button>
                     <AppConfigurator />

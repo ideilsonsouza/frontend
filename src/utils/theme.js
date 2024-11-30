@@ -1,4 +1,5 @@
 import { useLayout } from '@/layout/composables/layout';
+import { settingsStored } from '@/store/settings';
 import { $t, updatePreset, updateSurfacePalette } from '@primevue/themes';
 import Aura from '@primevue/themes/aura';
 import Lara from '@primevue/themes/lara';
@@ -6,25 +7,42 @@ import { ref } from 'vue';
 
 const { layoutConfig, setPrimary, setSurface, setPreset, setMenuMode, toggleDarkMode } = useLayout();
 
-const presets = {
-    Aura,
-    Lara
-};
+export const presetOptions = [
+    { object: Aura, value: 'Aura', label: 'Flutuante' },
+    { object: Lara, value: 'Lara', label: 'Bordas' }
+];
 
-const defaultTheme = {
-    preset: 'Lara',
-    primary: 'sky',
-    surface: 'slate',
-    darkTheme: 'true',
-    menuMode: 'overlay'
+export function onPresetChange(preset) {
+    const presetObject = presetOptions.find((option) => option.value === preset);
+
+    if (!presetObject) {
+        throw new Error("Preset não encontrado.");
+    }
+    setPreset(preset);
+
+    const surfacePalette = surfaces.value.find((s) => s.name === layoutConfig.surface)?.palette;
+
+    $t()
+        .preset(presetObject.object)
+        .preset(getPresetExt())
+        .surfacePalette(surfacePalette)
+        .use({ useDefaultOptions: true });
 }
 
-export const changeTheme = () => {
-    const preset = localStorage.getItem('preset') ?? defaultTheme.preset;
-    const primary = localStorage.getItem('primary') ?? defaultTheme.primary;
-    const surface = localStorage.getItem('surface') ?? defaultTheme.surface;
-    const darkTheme = localStorage.getItem('darkTheme') ?? defaultTheme.darkTheme;
-    const menuMode = localStorage.getItem('menuMode') ?? defaultTheme.menuMode;
+export const menuModeOptions = ref([
+    { label: 'Fixado', value: 'static' },
+    { label: 'Sobreposto', value: 'overlay' }
+]);
+
+
+export function changeTheme() {
+    const settings = settingsStored();
+
+    const preset = settings.theme.preset;
+    const primary = settings.theme.primary;
+    const surface = settings.theme.surface;
+    const darkTheme = settings.theme.darkTheme;
+    const menuMode = settings.theme.menuMode;
 
     const defaultPrimaryColor = primaryColors.value.find((element) => element.name === primary);
     const defaultSurfaceColor = surfaces.value.find((element) => element.name === surface);
@@ -34,16 +52,16 @@ export const changeTheme = () => {
     updateColors('primary', defaultPrimaryColor);
     updateColors('surface', defaultSurfaceColor);
 
-    if (darkTheme === 'true') {
+    if (darkTheme) {
         toggleDarkMode()
     }
 }
 
-function onMenuModeChange(menuMode) {
+export function onMenuModeChange(menuMode) {
     setMenuMode(menuMode);
 };
 
-function updateColors(type, color) {
+export function updateColors(type, color) {
     if (type === 'primary') {
         setPrimary(color.name);
     } else if (type === 'surface') {
@@ -53,7 +71,7 @@ function updateColors(type, color) {
     applyTheme(type, color);
 }
 
-function applyTheme(type, color) {
+export function applyTheme(type, color) {
     if (type === 'primary') {
         updatePreset(getPresetExt());
     } else if (type === 'surface') {
@@ -61,15 +79,8 @@ function applyTheme(type, color) {
     }
 }
 
-function onPresetChange(preset) {
-    setPreset(preset);
-    const presetValue = presets[preset];
-    const surfacePalette = surfaces.value.find((s) => s.name === layoutConfig.surface)?.palette;
 
-    $t().preset(presetValue).preset(getPresetExt()).surfacePalette(surfacePalette).use({ useDefaultOptions: true });
-}
-
-function getPresetExt() {
+export function getPresetExt() {
     const color = primaryColors.value.find((c) => c.name === layoutConfig.primary);
 
     if (color.name === 'noir') {
@@ -159,7 +170,7 @@ function getPresetExt() {
     }
 }
 
-const primaryColors = ref([
+export const primaryColors = ref([
     { name: 'noir', palette: {} },
     { name: 'emerald', palette: { 50: '#ecfdf5', 100: '#d1fae5', 200: '#a7f3d0', 300: '#6ee7b7', 400: '#34d399', 500: '#10b981', 600: '#059669', 700: '#047857', 800: '#065f46', 900: '#064e3b', 950: '#022c22' } },
     { name: 'green', palette: { 50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0', 300: '#86efac', 400: '#4ade80', 500: '#22c55e', 600: '#16a34a', 700: '#15803d', 800: '#166534', 900: '#14532d', 950: '#052e16' } },
@@ -179,7 +190,7 @@ const primaryColors = ref([
     { name: 'rose', palette: { 50: '#fff1f2', 100: '#ffe4e6', 200: '#fecdd3', 300: '#fda4af', 400: '#fb7185', 500: '#f43f5e', 600: '#e11d48', 700: '#be123c', 800: '#9f1239', 900: '#881337', 950: '#4c0519' } }
 ]);
 
-const surfaces = ref([
+export const surfaces = ref([
     {
         name: 'slate',
         palette: { 0: '#ffffff', 50: '#f8fafc', 100: '#f1f5f9', 200: '#e2e8f0', 300: '#cbd5e1', 400: '#94a3b8', 500: '#64748b', 600: '#475569', 700: '#334155', 800: '#1e293b', 900: '#0f172a', 950: '#020617' }

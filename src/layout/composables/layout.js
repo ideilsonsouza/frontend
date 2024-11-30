@@ -21,17 +21,14 @@ const layoutState = reactive({
 export function useLayout() {
     const setPrimary = (value) => {
         layoutConfig.primary = value;
-        localStorage.setItem('primary', value);        
     };
 
     const setSurface = (value) => {
         layoutConfig.surface = value;
-        localStorage.setItem('surface', value);
     };
 
     const setPreset = (value) => {
         layoutConfig.preset = value;
-        localStorage.setItem('preset', value);
     };
 
     const setActiveMenuItem = (item) => {
@@ -40,8 +37,6 @@ export function useLayout() {
 
     const setMenuMode = (mode) => {
         layoutConfig.menuMode = mode;
-        localStorage.setItem('menuMode', mode);
-        
     };
 
     const toggleDarkMode = () => {
@@ -57,7 +52,6 @@ export function useLayout() {
     const executeDarkModeToggle = () => {
         layoutConfig.darkTheme = !layoutConfig.darkTheme;
         document.documentElement.classList.toggle('app-dark');
-        localStorage.setItem('darkTheme', isDarkTheme.value);
     };
 
     const onMenuToggle = () => {

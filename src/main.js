@@ -1,3 +1,4 @@
+import { createPinia } from 'pinia';
 import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router';
@@ -9,11 +10,14 @@ import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
+
 import { changeTheme } from './utils/theme';
+
 
 const app = createApp(App);
 
 app.use(router);
+app.use(createPinia());
 app.use(PrimeVue, {
     theme: {
         preset: Aura,
