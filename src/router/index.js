@@ -1,5 +1,7 @@
 import AppLayout from '@/layout/AppLayout.vue';
 import { createRouter, createWebHistory } from 'vue-router';
+import { authRouters } from './authRouters';
+
 
 const router = createRouter({
     history: createWebHistory(),
@@ -14,6 +16,22 @@ const router = createRouter({
                     component: () => import('@/views/Dashboard.vue')
                 },
             ]
+        },
+        ...authRouters,
+
+        {
+            path: '/404',
+            name: 'notfound',
+            meta: {
+                title: 'Pagina não encontrada',
+                unprotected: true,
+            },
+            component: () => import('@/views/NotFound.vue')
+        },
+
+        {
+            path: '/:catchAll(.*)',
+            redirect: '/404'
         },
     ]
 });

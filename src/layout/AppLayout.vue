@@ -68,7 +68,7 @@ function isOutsideClicked(event) {
     <Toast position="bottom-left" group="bl" />
     <Toast position="top-center" group="top-center" />
 
-    <div class="card flex justify-center">
+    <div class=" flex justify-center">
         <Toast position="top-center" group="headless" @close="visible = false">
             <template #container="{ message, closeCallback }">
                 <section class="flex flex-col p-4 gap-4 w-full  rounded-xl">

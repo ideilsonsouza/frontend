@@ -89,7 +89,12 @@ export default class Storer {
             }
 
             const variable = localStorage.getItem(key);
-            return crypted ? Cryptor.decrypt(variable) : variable;
+            if (variable) {
+                return crypted ? Cryptor.decrypt(variable) : variable;
+            }
+            else {
+                return null;
+            }
         } catch (error) {
             this.handleError('Falha ao tentar recuperar o item', error);
         }
@@ -137,7 +142,11 @@ export default class Storer {
             // Recuperar JSON
             try {
                 const variable = this.get(key, crypted);
-                return variable ? JSON.parse(variable) : null;
+                if (variable) {
+                    return variable ? JSON.parse(variable) : null;
+                } else {
+                    return null;
+                }
             } catch (error) {
                 this.handleError('Falha ao tentar recuperar ou analisar JSON', error);
             }

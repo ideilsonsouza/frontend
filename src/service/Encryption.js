@@ -10,7 +10,7 @@ export const Cryptor = {
      * @returns {string} Chave secreta (deve ser personalizada para produção).
      */
     getKey() {
-        return process.env.CRYPTOR_SECRET_KEY || 'my_key_secret'; // Use variáveis de ambiente para maior segurança
+        return import.meta.env.VITE_ENCRYPT_KEY// Use variáveis de ambiente para maior segurança
     },
 
     /**
