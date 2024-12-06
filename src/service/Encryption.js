@@ -6,11 +6,12 @@ import CryptoJS from 'crypto-es';
  */
 export const Cryptor = {
     /**
+     * Use variáveis de ambiente para maior segurança
      * Retorna a chave secreta usada para encriptação/desencriptação.
      * @returns {string} Chave secreta (deve ser personalizada para produção).
      */
     getKey() {
-        return import.meta.env.VITE_ENCRYPT_KEY// Use variáveis de ambiente para maior segurança
+        return import.meta.env.VITE_ENCRYPT_KEY
     },
 
     /**

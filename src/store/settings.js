@@ -7,17 +7,21 @@ import { computed, reactive, ref } from "vue";
 export const settingsStored = defineStore('settings', () => {
 
     const state = reactive({
-        platform: ref({}),
+        platform: ref({
+            name: '',
+            auth: false
+        }),
         theme: Storer.json('theme') || DefaultTheme,
-        timeZone: import.meta.VITE_DEFAULT_TIMEZONE || 'America/Sao_Paulo',
-        locale: import.meta.VITE_DEFAULT_LOCALE || 'pt-BR',
-        backend: import.meta.VITE_DEFAULT_BACKEND || 'http://localhost:8000/api',
+        timeZone: import.meta.env.VITE_DEFAULT_TIMEZONE || 'America/Sao_Paulo',
+        locale: import.meta.env.VITE_DEFAULT_LOCALE || 'pt-BR',
+        backend: import.meta.env.VITE_DEFAULT_BACKEND || 'http://localhost:8000/api',
         remember: Storer.json('user_remember', null, true) || null,
     });
 
     function defaultPlatform() {
         try {
-            state.platform['name'] = 'Zabe mineração'
+            state.platform.name = 'Zabe mineração';
+            state.platform.auth = true;
         } catch (error) {
             MessageBox('Falha ao carregar plataforma')
         }

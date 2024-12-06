@@ -11,6 +11,8 @@ import ToastService from 'primevue/toastservice';
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
 
+import { authStored } from './store/auth';
+import { settingsStored } from './store/settings';
 import { changeTheme } from './utils/theme';
 
 
@@ -28,5 +30,20 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+
+
+const settings = settingsStored();
+
+if (settings.platform.auth) {
+    const authManage = authStored();
+    (async () => {
+        try {
+            await authManage.authVerify();
+        } catch (error) {
+            authStored.goLogin();
+        }
+    })()
+}
+
 changeTheme();
 app.mount('#app');

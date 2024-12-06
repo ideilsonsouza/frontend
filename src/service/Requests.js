@@ -1,3 +1,5 @@
+import { authStored } from "@/store/auth";
+import { settingsStored } from "@/store/settings";
 import axios from "axios";
 
 /**
@@ -23,11 +25,21 @@ export const ServiceRequest = async (method, url, data = null, customHeaders = {
     }
 
     // Configuração dos headers padrão
+    const settings = settingsStored();
+    const auth = authStored();
+
     const headers = {
         Accept: "application/json",
         "Content-Type": "application/json",
         ...customHeaders, // Mescla com headers personalizados
     };
+
+    if (settings.platform.auth && auth.token) {
+        headers['Authorization'] = `${auth.token_type} ${auth.token}`;
+    }
+
+    console.log(auth.token_type);
+
 
     // Combina configurações adicionais
     const axiosConfig = {

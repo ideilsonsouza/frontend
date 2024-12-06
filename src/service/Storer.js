@@ -65,7 +65,6 @@ export default class Storer {
             // Apenas salva se o valor for diferente
             if (currentValue !== newValue) {
                 localStorage.setItem(key, newValue);
-                this.logOperation('SET', key, newValue);
             }
         } catch (error) {
             this.handleError('Falha ao tentar salvar o item', error);
@@ -114,7 +113,6 @@ export default class Storer {
             }
 
             localStorage.removeItem(key);
-            this.logOperation('DELETE', key);
         } catch (error) {
             this.handleError('Falha ao tentar excluir o item', error);
         }

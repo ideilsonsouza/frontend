@@ -1,53 +1,102 @@
 <script setup>
+/**
+ * Importações de componentes e serviços necessários.
+ * - FloatingConfigurator: Componente auxiliar de configuração flutuante.
+ * - authController: Controlador de autenticação para comunicação com o backend.
+ * - Storer: Serviço de armazenamento para gerenciar dados no localStorage.
+ * - Toast: Serviço de mensagens para notificações (sucesso/erro).
+ * - settingsStored: Store para gerenciar configurações globais do sistema.
+ * - Vue Composition API: Funções `onBeforeMount`, `onMounted`, e `ref`.
+ */
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import { authController } from '@/service/AuthController';
 import Storer from '@/service/Storer';
 import { MessageError, MessageSuccess, initializeToast } from '@/service/Toast';
+import { authStored } from '@/store/auth'; // Store de autenticação
 import { settingsStored } from '@/store/settings';
 import { onBeforeMount, onMounted, ref } from 'vue';
 
-
+// Store de configurações do sistema
 const settings = settingsStored();
 
+const temp = ref('');
+
+// Store de autenticação para gerenciar login, token e estado do usuário
+const auth = authStored();
+
+// Campos reativos para o formulário de login
 const email = ref('');
 const password = ref('');
 const checked_remember = ref(false);
 
-
-function onActionAuth() {
+/**
+ * Função responsável por realizar o processo de autenticação.
+ * Faz a validação dos campos, chama a API de login, salva os dados do usuário
+ * no armazenamento local (se o "lembrar" estiver ativado), e exibe mensagens de notificação.
+ */
+async function onActionAuth() {
     try {
         const data = {
-            user: email.value,
+            email: email.value,
             password: password.value
+        };
+
+        // Validação de campos obrigatórios
+        if (!data.email || !data.password) {
+            throw new Error('Preencha todos os campos'); // Exceção com mensagem amigável
         }
-        if (checked_remember.value == true) {
+
+        // Salvar credenciais no localStorage caso "lembrar" esteja ativado
+        if (checked_remember.value) {
             Storer.json('user_remember', data, true);
             if (!settings.remember) {
-                MessageSuccess('Usuário salvo com sucesso')
+                MessageSuccess('Usuário salvo com sucesso');
             }
         } else {
-            Storer.delete('user_remember');
+            Storer.delete('user_remember'); // Remove as credenciais salvas
+        }
+
+        // Login utilizando a store de autenticação
+        const response = await authController.login(data);
+
+        if (response) {
+            auth.defineToken(response.token, response.type); // Armazena o token no estado global
+            auth.defineUser(response.user); // Armazena os dados do usuário
+            auth.defineIsAuth(true); // Define o status como autenticado
+            settings.setTheme(response.user?.settings?.theme)
+            MessageSuccess('Login realizado com sucesso');
+            window.location.href = '/';
+
+        } else {
+            throw new Error('Erro ao processar o login');
         }
     } catch (error) {
-        MessageError(error.message)
+        // Exibe mensagem de erro caso o processo falhe
+        MessageError(error.message || 'Erro ao realizar login');
     }
-
 }
 
+/**
+ * Lifecycle hook executado antes do componente ser montado.
+ * - Lê os dados salvos no localStorage (se "lembrar" estiver ativado) e
+ *   preenche os campos de e-mail e senha.
+ */
 onBeforeMount(() => {
-
     if (settings.remember) {
-        checked_remember.value = true;
-        const remember = Storer.json('user_remember', null, true);
-        email.value = remember?.user || '';
-        password.value = remember?.password || '';
+        checked_remember.value = true; // Define a opção "lembrar" como ativa
+        const remember = Storer.json('user_remember', null, true); // Recupera os dados salvos
+        email.value = remember?.email || ''; // Preenche o campo de e-mail
+        password.value = remember?.password || ''; // Preenche o campo de senha
     }
-
 });
 
+/**
+ * Lifecycle hook executado após o componente ser montado.
+ * - Inicializa o serviço de notificações (Toast).
+ */
 onMounted(() => {
     initializeToast();
 });
-
 </script>
 
 <template>
@@ -56,6 +105,7 @@ onMounted(() => {
         class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
             <div>
+
                 <div
                     class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20 
                     border-spacing-1 border-surface-400 dark:border-surface-600 border shadow-xl shadow-slate-800 rounded-xl">
