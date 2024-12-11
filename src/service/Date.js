@@ -1,6 +1,9 @@
+import { settingsStored } from '@/store/settings';
 import { format, parseISO } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
 import { ptBR } from 'date-fns/locale';
+
+
 
 /**
  * Serviço utilitário para manipulação e formatação de datas.
@@ -25,9 +28,13 @@ export const ServiceDate = {
      * @param {string} timeZone Fuso horário a ser considerado (padrão: 'America/Sao_Paulo').
      * @returns {string|null} Data formatada ou `null` se a data for inválida.
      */
-    formatted(date, formatString = 'yyyy-MM-dd', timeZone = 'America/Sao_Paulo') {
+    formatted(date, formatString = 'yyyy-MM-dd', timeZone = null) {
         try {
+            const settings = settingsStored();
             if (!date) return null;
+            if (!timeZone) {
+                timeZone = settings.timeZone;
+            }
             return formatInTimeZone(new Date(date), timeZone, formatString, { locale: ptBR });
         } catch (error) {
             throw new Error(`Erro ao formatar data no fuso horário ${timeZone}: ${error.message}`);
@@ -71,14 +78,17 @@ export const ServiceDate = {
      * @param {string} timeZone Fuso horário a ser considerado (padrão: 'America/Sao_Paulo').
      * @returns {string} Data formatada.
      */
-    formatOrNow(date, formatString = 'yyyy-MM-dd', timeZone = 'America/Sao_Paulo') {
+    formatOrNow(date, formatString = 'yyyy-MM-dd', timeZone = null) {
         try {
+            const settings = settingsStored();
             const dateToFormat = date
                 ? typeof date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(date)
                     ? parseISO(date)
                     : new Date(date)
                 : new Date();
-
+            if (!timeZone) {
+                timeZone = settings.timeZone;
+            }
             return formatInTimeZone(dateToFormat, timeZone, formatString, { locale: ptBR });
         } catch (error) {
             throw new Error(`Erro ao formatar ou usar data atual: ${error.message}`);

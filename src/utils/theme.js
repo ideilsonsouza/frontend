@@ -8,8 +8,8 @@ import { ref } from 'vue';
 const { layoutConfig, setPrimary, setSurface, setPreset, setMenuMode, toggleDarkMode } = useLayout();
 
 export const presetOptions = [
-    { object: Aura, value: 'Aura', label: 'Flutuante' },
-    { object: Lara, value: 'Lara', label: 'Bordas' }
+    { object: Aura, value: 'Aura', label: 'floating' },
+    { object: Lara, value: 'Lara', label: 'edges' }
 ];
 
 export function onPresetChange(preset) {
@@ -30,8 +30,8 @@ export function onPresetChange(preset) {
 }
 
 export const menuModeOptions = ref([
-    { label: 'Fixado', value: 'static' },
-    { label: 'Sobreposto', value: 'overlay' }
+    { label: 'static', value: 'static' },
+    { label: 'overlay', value: 'overlay' }
 ]);
 
 

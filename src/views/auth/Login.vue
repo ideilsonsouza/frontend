@@ -19,8 +19,6 @@ import { onBeforeMount, onMounted, ref } from 'vue';
 // Store de configurações do sistema
 const settings = settingsStored();
 
-const temp = ref('');
-
 // Store de autenticação para gerenciar login, token e estado do usuário
 const auth = authStored();
 

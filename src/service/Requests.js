@@ -38,9 +38,6 @@ export const ServiceRequest = async (method, url, data = null, customHeaders = {
         headers['Authorization'] = `${auth.token_type} ${auth.token}`;
     }
 
-    console.log(auth.token_type);
-
-
     // Combina configurações adicionais
     const axiosConfig = {
         method: method.toUpperCase(), // Garante que o método esteja em maiúsculas

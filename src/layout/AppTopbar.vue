@@ -4,10 +4,10 @@ import { TopBarItems } from '@/utils/TopBar';
 import { useRouter } from 'vue-router';
 import AppConfigurator from './AppConfigurator.vue';
 
+
 const router = useRouter()
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
-
 
 const printLog = () => {
     console.log('Mostrando log');
@@ -60,14 +60,14 @@ const itemClick = (item) => {
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
-                <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
+                <!-- <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
                     <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
-                </button>
+                </button> -->
                 <div class="relative">
                     <button
                         v-styleclass="{ selector: '@next', enterFromClass: 'hidden', enterActiveClass: 'animate-scalein', leaveToClass: 'hidden', leaveActiveClass: 'animate-fadeout', hideOnOutsideClick: true }"
                         type="button" class="layout-topbar-action layout-topbar-action">
-                        <i class="pi pi-palette"></i>
+                        <i class="pi pi-cog"></i>
                     </button>
                     <AppConfigurator />
                 </div>

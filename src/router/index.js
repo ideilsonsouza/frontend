@@ -1,9 +1,9 @@
+import appRouters from '@/app/router';
 import AppLayout from '@/layout/AppLayout.vue';
 import { authStored } from '@/store/auth';
 import { settingsStored } from '@/store/settings';
 import { createRouter, createWebHistory } from 'vue-router';
 import { authRouters } from './authRouters';
-
 
 const router = createRouter({
     history: createWebHistory(),
@@ -17,10 +17,10 @@ const router = createRouter({
                     name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue')
                 },
+                ...appRouters
             ]
         },
         ...authRouters,
-
         {
             path: '/404',
             name: 'notfound',
